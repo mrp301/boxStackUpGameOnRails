@@ -1,0 +1,10 @@
+<div class="scoreTable">
+  <p>■スコア一覧</p>
+  <%= render :partial => "list", :locals => { score: @score } %>
+</div>
+
+<div id="js-scoreContainer" class="score is-hide">
+  <p>■登録画面</p>
+  <p>スコア：<span id="js-score-number"></span></p>
+  <%= render 'form', score: @score %>
+</div>

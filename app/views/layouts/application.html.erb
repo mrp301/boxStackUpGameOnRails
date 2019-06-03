@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BoxStackUpGameOnRails</title>
+    <script src='https://cdn.rawgit.com/phi-jp/phina.js/v0.2.0/build/phina.js'></script>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>
+
+<style>
+p {
+  margin: 0 0 5px 0;
+}
+
+.is-hide {
+  display: none;
+}
+
+.score {
+  position: absolute;
+  right: 10px;
+  padding: 5px 10px;
+  border: solid 1px #333;
+}
+
+.scoreTable {
+  position: absolute;
+  left: 10px;
+  padding: 5px 10px;
+  border: solid 1px #333;
+}
+
+th,td {
+  margin: 0;
+  border-bottom: solid 1px #333;
+}
+
+</style>

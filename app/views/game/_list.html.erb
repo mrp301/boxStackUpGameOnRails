@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>スコア</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @scores.each do |score| %>
+    <tr>
+      <td><%= score.user_name %></td>
+      <td><%= score.score %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

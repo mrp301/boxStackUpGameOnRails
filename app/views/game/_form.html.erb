@@ -1,0 +1,13 @@
+<%= form_for @score, :url => {:action => :index} do |form| %>
+<div class="field">
+  <%= form.label :user_name %>
+  <%= form.text_field :user_name %>
+</div>
+
+<%= form.hidden_field :score %>
+
+
+<div class="actions">
+  <%= form.submit %>
+</div>
+<% end %>
