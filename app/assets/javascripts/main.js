@@ -51,6 +51,8 @@ var daishaY = -125//当たり判定位置調整Y
 var playerPosition = 0
 var playerScale = false//false反転なし
 var boxCount = 0
+var boxStack = 0
+var boxDelete = false
 var SCREEN_WIDTH = 493;  // スクリーン幅
 var SCREEN_HEIGHT = 740;  // スクリーン高さ
 var MISS_COUNT = 0
@@ -67,12 +69,13 @@ phina.define("MainScene", {
     //スコアリセット
     boxCount = 0
     MISS_COUNT = 0
+    boxDelete = false
     // 親クラス初期化
     // 背景
     this.backgroundColor = 'skyblue';
 
     //スコア表示
-     this.scoreLabel = Label(boxCount+"/10").addChildTo(this);
+     this.scoreLabel = Label("score:"+boxCount).addChildTo(this);
      this.scoreLabel.x = this.gridX.center();
      this.scoreLabel.y = this.gridY.span(4);
      this.scoreLabel.fill = 'gray';
@@ -102,20 +105,21 @@ phina.define("MainScene", {
     var player = this.player;
     playerPosition = this.player.x
 
-    this.scoreLabel.text = boxCount+"/10"
+    this.scoreLabel.text = "score:" + boxCount
 
-    if(boxCount === 10){
+    if(boxCount === 20){
       this.exit({
-        message: 'クリア！',
+        message: '君は神を超えた！',
       });
-    } else if(MISS_COUNT === -1) {
+    } else if(MISS_COUNT === -5) {
       this.exit({
-        message: '失敗',
+        message: '終了！',
       });
     }
 
     if (key.getKey('left')) {
       playerScale = false
+      boxDelete = false
       if(player.scaleX === -1) {
         player.scaleX *= -1
       }
@@ -127,6 +131,7 @@ phina.define("MainScene", {
     }
     if (key.getKey('right')) {
       playerScale = true
+      boxDelete = false
       //player.scaleX *= -1
       if(player.scaleX === -1) {
         player.scaleX *= -1
@@ -137,6 +142,17 @@ phina.define("MainScene", {
       }
       player.x += SPEED;
     }
+
+    // if (key.getKeyUp('space')) {
+    //   if (!boxDelete && (boxStack > 4)) {
+    //     boxDelete = true
+    //     key.clearKey('space')
+    //   }
+    // }
+    //
+    // if (key.getKeyDown('space')) {
+    //   boxDelete = false
+    // }
 
     if (key.getKey('shift')) {
       player.anim.ss.getAnimation('left').frequency = 2
@@ -170,6 +186,10 @@ phina.define("MainScene", {
       this.createBox();
     }
 
+    if (app.frame % 90 === 0) {
+      this.createBox();
+    }
+
     // 敵とプレイヤーの辺り判定
     this.hitTestEnemyPlayer();
   },
@@ -194,7 +214,11 @@ phina.define("MainScene", {
           var c1x = (player.x - daishaX)
         }
 
-        var c1y = ((player.y - daishaY) - (boxCount*60))
+        if (boxStack > 4) {
+          var c1y = ((player.y - daishaY))
+        } else {
+          var c1y = ((player.y - daishaY) - (boxStack * 60))
+        }
 
        // 判定用の円
        var c1 = Circle(c1x, c1y, HIT_RADIUS1);
@@ -203,6 +227,11 @@ phina.define("MainScene", {
        if (Collision.testCircleCircle(c1, c2) && !box.hit) {
           box.hit = true
           boxCount ++
+          if (boxStack > 4) {
+            boxStack = 0
+          } else {
+            boxStack ++
+          }
        }
      });
    },
@@ -231,6 +260,12 @@ phina.define("box", {
     if (this.y === 860) {
       this.remove()
       MISS_COUNT --
+    }
+
+    if (boxStack > 4) {
+      if(this.hit) {
+        this.remove()
+      }
     }
   }
 });
@@ -304,7 +339,7 @@ phina.define("Result", {
    // 親クラス初期化
    this.superInit();
    // 背景色
-   this.backgroundColor = '#a8b0ef'
+   this.backgroundColor = 'skyblue'
    var that = this
    // ボタンサンプル
    var button = Button({

@@ -2,7 +2,7 @@ class GameController < ApplicationController
 
   def index
     @score = Score.new
-    @scores = Score.all
+    @scores = Score.all.order('score DESC')
   end
 
   def create
@@ -20,7 +20,7 @@ class GameController < ApplicationController
   end
 
   def list
-    @scores = Score.all
+    @scores = Score.all.order('score')
   end
 
   private
